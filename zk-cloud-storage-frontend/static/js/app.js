@@ -282,7 +282,7 @@ async function loadFiles() {
       const date = new Date(f.uploaded_at).toLocaleString();
       const size = ZKCrypto.formatBytes(f.encrypted_size);
       return `
-      <div class="file-item" data-id="${f.id}">
+      <div class="file-item" data-id="${escHtml(f.id)}" data-filename="${escHtml(f.original_name)}">
         <div class="file-icon"><i class="fas fa-file-shield"></i></div>
         <div class="file-meta">
           <div class="file-name">
@@ -293,17 +293,17 @@ async function loadFiles() {
         </div>
         <div class="file-actions">
           <button class="btn btn-sm btn-primary"
-                  onclick="downloadEncrypted('${f.id}', '${escHtml(f.original_name)}')"
+                  data-action="download"
                   title="Download self-contained .enc container (can be decrypted offline)">
             <i class="fas fa-download"></i> ⬇ .enc
           </button>
           <button class="btn btn-sm btn-success"
-                  onclick="openDecryptModal('${f.id}', '${escHtml(f.original_name)}')"
+                  data-action="decrypt"
                   title="Decrypt and download original file">
             <i class="fas fa-unlock"></i> Decrypt
           </button>
           <button class="btn btn-sm btn-danger"
-                  onclick="deleteFile('${f.id}')"
+                  data-action="delete"
                   title="Delete from server">
             <i class="fas fa-trash"></i>
           </button>
@@ -324,6 +324,27 @@ refreshBtn.addEventListener("click", () => {
   const icon = refreshBtn.querySelector("i");
   icon.style.animation = "spin 0.7s linear infinite";
   loadFiles().finally(() => setTimeout(() => icon.style.animation = "", 800));
+});
+
+filesList.addEventListener("click", event => {
+  const button = event.target.closest("button[data-action]");
+  const row = button && button.closest(".file-item");
+  if (!row) return;
+
+  const fileId = row.dataset.id;
+  const filename = row.dataset.filename;
+
+  switch (button.dataset.action) {
+    case "download":
+      if (fileId && filename) downloadEncrypted(fileId, filename);
+      break;
+    case "decrypt":
+      if (fileId && filename) openDecryptModal(fileId, filename);
+      break;
+    case "delete":
+      if (fileId) deleteFile(fileId);
+      break;
+  }
 });
 
 // ─── Download self-contained .enc container ──────────────
@@ -374,8 +395,6 @@ async function downloadEncrypted(fileId, originalName) {
     }
   }
 }
-window.downloadEncrypted = downloadEncrypted;
-
 // ─── Local .enc file decrypt ─────────────────────────────
 //
 // Allows the user to pick a .enc file from disk, enter their password,
@@ -568,8 +587,6 @@ async function deleteFile(fileId) {
     alert("Error: " + err.message);
   }
 }
-window.deleteFile = deleteFile;
-
 // ─── Decrypt modal ───────────────────────────────────────────
 
 function openDecryptModal(fileId, filename) {
@@ -585,8 +602,6 @@ function openDecryptModal(fileId, filename) {
   modalOverlay.style.display = "flex";
   setTimeout(() => decPassword.focus(), 100);
 }
-window.openDecryptModal = openDecryptModal;
-
 function closeModal() {
   modalOverlay.style.display = "none";
   currentFileId   = null;

@@ -85,6 +85,21 @@ class TestIndex:
         r = client.get("/")
         assert "text/html" in r.content_type
 
+    def test_serves_frontend_styles_and_scripts(self, client):
+        page = client.get("/")
+        assert b"/static/css/style.css" in page.data
+        assert b"/static/js/config.js" in page.data
+
+        for asset in (
+            "/static/css/style.css",
+            "/static/js/config.js",
+            "/static/js/crypto.js",
+            "/static/js/app.js",
+        ):
+            response = client.get(asset)
+            assert response.status_code == 200, asset
+            assert response.data
+
 
 # ─── Upload ──────────────────────────────────────────────────
 

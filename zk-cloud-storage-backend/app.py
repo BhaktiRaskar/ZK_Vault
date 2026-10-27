@@ -32,12 +32,15 @@ UPLOAD_FOLDER = os.environ.get(
     "UPLOAD_FOLDER",
     os.path.join(os.path.dirname(__file__), "uploads")
 )
+FRONTEND_STATIC_FOLDER = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "zk-cloud-storage-frontend", "static")
+)
 METADATA_FILE = os.path.join(UPLOAD_FOLDER, "_metadata.json")
 MAX_CONTENT_LENGTH = int(os.environ.get("MAX_UPLOAD_MB", 64)) * 1024 * 1024
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=FRONTEND_STATIC_FOLDER)
 app.config["UPLOAD_FOLDER"]       = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"]  = MAX_CONTENT_LENGTH
 # SECRET_KEY must be set in the environment for production.

@@ -24,7 +24,7 @@ zk-cloud-storage-frontend/
 
 ## Quick start (local development)
 
-The backend and this static frontend are separate projects. Start both servers in separate Kiro IDE terminals. Do not open the backend's `/` page for the dashboard: its legacy Flask template references assets that belong to this frontend project.
+The backend and this static frontend are separate projects. Start both servers in separate PowerShell terminals. For the recommended setup, open the static frontend at `http://127.0.0.1:8080`. When both project folders are side by side as shown below, the backend's `http://127.0.0.1:5000/` page also serves the dashboard and its CSS/JavaScript from this frontend folder.
 
 ### 1. Start the backend
 
@@ -48,7 +48,7 @@ Set-Location "C:\Users\bhakt\Crypto Project\zk-cloud-storage-frontend"
 py -m http.server 8080 --bind 127.0.0.1
 ```
 
-Open **http://127.0.0.1:8080**. Serving from the frontend directory is important so `static/css/style.css` and the JavaScript modules resolve correctly.
+Open **http://127.0.0.1:8080**. Serving from the frontend directory ensures its CSS and JavaScript modules resolve correctly. The backend root page is also available locally at **http://127.0.0.1:5000/**.
 
 The API base URL is configured in `static/js/config.js`. Keep it set to the backend's public URL when deploying; it is a URL, not a secret. If the frontend origin changes, configure the backend's `ALLOWED_ORIGINS` to include that exact origin.
 
