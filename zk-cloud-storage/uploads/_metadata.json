@@ -1,0 +1,38 @@
+{
+  "6d89b890-d9a2-4a7a-99a6-4cc5e874e059": {
+    "id": "6d89b890-d9a2-4a7a-99a6-4cc5e874e059",
+    "original_name": "crypto.docx",
+    "stored_name": "6d89b890-d9a2-4a7a-99a6-4cc5e874e059.enc",
+    "salt": "4426c2385749091e86364414cfb7e51a",
+    "iv": "bfea1ccdd18dc42a6e278dac",
+    "encrypted_size": 13545,
+    "uploaded_at": "2026-10-18T05:13:29.822293Z"
+  },
+  "7dd5ec42-4cf7-4ca2-ad68-a91cdcb273e0": {
+    "id": "7dd5ec42-4cf7-4ca2-ad68-a91cdcb273e0",
+    "original_name": "test.pdf",
+    "stored_name": "7dd5ec42-4cf7-4ca2-ad68-a91cdcb273e0.enc",
+    "salt": "aabbccddeeff00112233445566778899",
+    "iv": "001122334455667788990011",
+    "encrypted_size": 65,
+    "uploaded_at": "2026-10-18T07:54:26.265139Z"
+  },
+  "401308fe-92af-4352-844c-ca99946ab81e": {
+    "id": "401308fe-92af-4352-844c-ca99946ab81e",
+    "original_name": "photo.jpg",
+    "stored_name": "401308fe-92af-4352-844c-ca99946ab81e.enc",
+    "salt": "aabbccddeeff00112233445566778899",
+    "iv": "001122334455667788990011",
+    "encrypted_size": 28,
+    "uploaded_at": "2026-10-18T07:54:26.325261Z"
+  },
+  "0db5a03c-ef7f-4ce8-9786-7ec43330e49e": {
+    "id": "0db5a03c-ef7f-4ce8-9786-7ec43330e49e",
+    "original_name": "notes.txt",
+    "stored_name": "0db5a03c-ef7f-4ce8-9786-7ec43330e49e.enc",
+    "salt": "aabbccddeeff00112233445566778899",
+    "iv": "001122334455667788990011",
+    "encrypted_size": 48,
+    "uploaded_at": "2026-10-18T07:54:26.381165Z"
+  }
+}
