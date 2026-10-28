@@ -13,5 +13,5 @@
 const CONFIG = {
   // Must be the Flask backend origin, not the frontend's origin. No trailing slash.
   // This local URL matches the Flask app's default port.
-  API_BASE_URL: "http://127.0.0.1:5000",
+  API_BASE_URL: "https://zk-vault-rf59.onrender.com/",
 };
