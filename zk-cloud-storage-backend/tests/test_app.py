@@ -112,6 +112,28 @@ class TestUpload:
         assert "file_id" in body
         assert body["original_name"] == "test.txt"
 
+    @pytest.mark.parametrize("origin", [
+        "http://127.0.0.1:5000",
+        "http://localhost:5000",
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ])
+    def test_upload_allows_live_server_origin(self, client, origin):
+        response = client.post(
+            "/api/upload",
+            data={
+                "file": (BytesIO(b"encrypted"), "test.txt"),
+                "filename": "test.txt",
+                "salt": "aabbccddeeff00112233445566778899",
+                "iv": "001122334455667788990011",
+            },
+            content_type="multipart/form-data",
+            headers={"Origin": origin},
+        )
+
+        assert response.status_code == 201
+        assert response.headers["Access-Control-Allow-Origin"] == origin
+
     def test_upload_creates_file_on_disk(self, client, tmp_path):
         r = _make_upload(client)
         fid = r.get_json()["file_id"]
@@ -164,6 +186,16 @@ class TestUpload:
 class TestListFiles:
     def test_empty_list(self, client):
         assert client.get("/api/files").get_json()["files"] == []
+
+    @pytest.mark.parametrize("origin", [
+        "http://127.0.0.1:5000",
+        "http://localhost:5000",
+    ])
+    def test_file_list_allows_local_backend_page_origin(self, client, origin):
+        response = client.get("/api/files", headers={"Origin": origin})
+
+        assert response.status_code == 200
+        assert response.headers["Access-Control-Allow-Origin"] == origin
 
     def test_lists_uploaded_file(self, client):
         _make_upload(client, filename="hello.txt")

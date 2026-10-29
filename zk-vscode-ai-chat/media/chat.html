@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src {{cspSource}} 'nonce-{{nonce}}'; script-src 'nonce-{{nonce}}';">
+  <link rel="stylesheet" href="{{styleUri}}">
+  <title>AI Chat Assistant</title>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>AI Chat</h1>
+        <p>Ask about your code. Use <code>/explain</code>, <code>/fix</code>, or <code>/refactor</code>.</p>
+      </div>
+      <button id="clear" class="icon-button" type="button" title="Clear conversation" aria-label="Clear conversation">Clear</button>
+    </header>
+    <section id="messages" class="messages" aria-live="polite">
+      <div id="welcome" class="welcome">
+        <strong>How can I help?</strong>
+        <span>Your selection or open file can be included as context. Review your provider settings before sharing sensitive code.</span>
+      </div>
+    </section>
+    <div id="status" class="status" role="status"></div>
+    <form id="composer" class="composer">
+      <textarea id="prompt" rows="3" maxlength="20000" placeholder="Ask a coding question…" aria-label="Message"></textarea>
+      <div class="composer-footer">
+        <span>Enter to send · Shift+Enter for newline</span>
+        <button id="send" type="submit">Send</button>
+      </div>
+    </form>
+  </main>
+  <script nonce="{{nonce}}" src="{{scriptUri}}"></script>
+</body>
+</html>

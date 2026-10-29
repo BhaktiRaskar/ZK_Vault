@@ -8,7 +8,7 @@ Environment variables (create a .env file locally, or set in your host):
   SECRET_KEY        – Flask session signing key (generate with: python -c "import secrets; print(secrets.token_hex(32))")
   ALLOWED_ORIGINS   – Comma-separated list of allowed CORS origins
                       e.g. "http://localhost:8080,https://your-frontend.com"
-                      Defaults to localhost and 127.0.0.1 on port 8080 (local dev only)
+                      Local development origins on ports 8080 and 5500 are always allowed
   UPLOAD_FOLDER     – Optional path override for the uploads directory
   MAX_UPLOAD_MB     – Optional max upload size in MB (default: 64)
 """
@@ -50,11 +50,20 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or os.urandom(32)
 # ── CORS ──────────────────────────────────────────────────────────────────────
 # Read allowed origins from the environment.
 # NEVER allow "*" in production — that would let any website call your API.
-_raw_origins = os.environ.get(
-    "ALLOWED_ORIGINS",
-    "http://127.0.0.1:8080,http://localhost:8080"
-)
-ALLOWED_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+_local_origins = [
+    "http://127.0.0.1:5000",
+    "http://localhost:5000",
+    "http://127.0.0.1:8080",
+    "http://localhost:8080",
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+]
+_configured_origins = [
+    origin.strip()
+    for origin in os.environ.get("ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+ALLOWED_ORIGINS = list(dict.fromkeys(_local_origins + _configured_origins))
 
 CORS(app, origins=ALLOWED_ORIGINS, supports_credentials=False)
 

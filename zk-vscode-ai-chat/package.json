@@ -1,0 +1,108 @@
+{
+  "name": "zk-vscode-ai-chat",
+  "displayName": "VS Code AI Chat Assistant",
+  "description": "A context-aware AI coding assistant in a VS Code sidebar.",
+  "version": "0.1.0",
+  "publisher": "local-dev",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:zkAiChat.chatView",
+    "onCommand:zkAiChat.setApiKey",
+    "onCommand:zkAiChat.explainSelection",
+    "onCommand:zkAiChat.fixSelection",
+    "onCommand:zkAiChat.refactorSelection"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "zkAiChat.open",
+        "title": "AI Chat: Open Chat"
+      },
+      {
+        "command": "zkAiChat.setApiKey",
+        "title": "AI Chat: Set API Key"
+      },
+      {
+        "command": "zkAiChat.explainSelection",
+        "title": "AI Chat: Explain Selection"
+      },
+      {
+        "command": "zkAiChat.fixSelection",
+        "title": "AI Chat: Fix Selection"
+      },
+      {
+        "command": "zkAiChat.refactorSelection",
+        "title": "AI Chat: Refactor Selection"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "zkAiChat",
+          "title": "AI Chat",
+          "icon": "media/chat.svg"
+        }
+      ]
+    },
+    "views": {
+      "zkAiChat": [
+        {
+          "id": "zkAiChat.chatView",
+          "name": "AI Chat Assistant",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AI Chat Assistant",
+      "properties": {
+        "zkAiChat.provider": {
+          "type": "string",
+          "enum": [
+            "openai",
+            "gemini",
+            "groq",
+            "ollama"
+          ],
+          "default": "openai",
+          "description": "AI provider used for chat requests."
+        },
+        "zkAiChat.model": {
+          "type": "string",
+          "default": "gpt-4o-mini",
+          "description": "Model name for the selected provider."
+        },
+        "zkAiChat.ollamaBaseUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Base URL of the Ollama server."
+        },
+        "zkAiChat.includeCurrentFile": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include the current selection, or the open file when nothing is selected, in each prompt."
+        },
+        "zkAiChat.maxContextCharacters": {
+          "type": "number",
+          "default": 20000,
+          "minimum": 1000,
+          "maximum": 100000,
+          "description": "Maximum number of source characters included as editor context."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^14.1.0"
+  }
+}

@@ -51,6 +51,7 @@ const navStatusText      = document.getElementById("nav-status-text");
 let selectedFile    = null;
 let currentFileId   = null;   // file open in the decrypt modal
 let currentFileMeta = null;   // full metadata for the open modal file
+const API_BASE_URL  = CONFIG.API_BASE_URL.replace(/\/+$/, "");
 
 // ─── Helpers ─────────────────────────────────────────────────
 
@@ -86,7 +87,7 @@ async function animateProgress(fillEl, labelEl, steps) {
 function uploadWithProgress(formData) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${CONFIG.API_BASE_URL}/api/upload`);
+    xhr.open("POST", `${API_BASE_URL}/api/upload`);
 
     xhr.upload.addEventListener("progress", event => {
       if (!event.lengthComputable) return;
@@ -110,7 +111,9 @@ function uploadWithProgress(formData) {
       resolve(data);
     });
 
-    xhr.addEventListener("error", () => reject(new Error("Upload failed because the connection to the backend was interrupted.")));
+    xhr.addEventListener("error", () => reject(new Error(
+      "Could not reach the backend. Check that it is online and, if the frontend is hosted separately, that its origin is allowed in the backend's ALLOWED_ORIGINS setting."
+    )));
     xhr.addEventListener("abort", () => reject(new Error("Upload was cancelled.")));
     xhr.send(formData);
   });
@@ -265,7 +268,7 @@ uploadBtn.addEventListener("click", async () => {
 
 async function loadFiles() {
   try {
-    const resp = await fetch(`${CONFIG.API_BASE_URL}/api/files`);
+    const resp = await fetch(`${API_BASE_URL}/api/files`);
     if (!resp.ok) throw new Error(`Server error ${resp.status}`);
     const data = await resp.json();
 
@@ -363,7 +366,7 @@ async function downloadEncrypted(fileId, originalName) {
   if (dlBtn) { dlBtn.disabled = true; dlBtn.innerHTML = '<span class="spinner"></span>'; }
 
   try {
-    const resp = await fetch(`${CONFIG.API_BASE_URL}/api/files/${fileId}/download`);
+    const resp = await fetch(`${API_BASE_URL}/api/files/${fileId}/download`);
     if (!resp.ok) throw new Error(`Server returned ${resp.status} ${resp.statusText}`);
 
     // Read as binary
@@ -578,7 +581,7 @@ localDecryptBtn.addEventListener("click", async () => {
 async function deleteFile(fileId) {
   if (!confirm("Delete this encrypted file from the server?")) return;
   try {
-    const resp = await fetch(`${CONFIG.API_BASE_URL}/api/files/${fileId}`, { method: "DELETE" });
+    const resp = await fetch(`${API_BASE_URL}/api/files/${fileId}`, { method: "DELETE" });
     if (!resp.ok) throw new Error("Delete failed");
     loadFiles();
     setNavStatus("File deleted", "var(--warning)");
@@ -658,7 +661,7 @@ decryptBtn.addEventListener("click", async () => {
       [20, "Downloading encrypted blob from server…", 300],
     ]);
 
-    const resp = await fetch(`${CONFIG.API_BASE_URL}/api/files/${currentFileId}`);
+    const resp = await fetch(`${API_BASE_URL}/api/files/${currentFileId}`);
     if (!resp.ok) throw new Error(`Server error ${resp.status}: ${resp.statusText}`);
 
     const meta = await resp.json();
